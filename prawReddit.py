@@ -15,14 +15,24 @@ def prawReddit():
     last_fetched_post_id = os.environ["LAST_FETCHED_POST_ID"]
     subreddit = reddit.subreddit("manga")
     returnList = []
-    top_posts = list(subreddit.new(limit=10, params={
+    if (checkRemoved(last_fetched_post_id)):
+        top_posts = list(subreddit.new(limit=10))
+    else:
+        top_posts = list(subreddit.new(limit=None, params={
                     'before': last_fetched_post_id}))
-
     if (top_posts):
         os.environ["LAST_FETCHED_POST_ID"] = top_posts[0].fullname
         set_key(dotenv_file, "LAST_FETCHED_POST_ID", os.environ["LAST_FETCHED_POST_ID"])
     for submission in top_posts:
         if ("[DISC]" in submission.title):
-            returnList.append("https://www.reddit.com/r/manga/comments/" + submission.id)
+            returnList.append("https://www.reddit.com" + submission.permalink)
     
     return returnList
+
+def checkRemoved(last_fetched_post_id):
+    post2 = reddit.submission(id=last_fetched_post_id[3:])
+    return not(post2.removed_by_category is None)
+    
+
+if __name__ == '__main__':
+    prawReddit()
