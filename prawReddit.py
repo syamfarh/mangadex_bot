@@ -24,7 +24,7 @@ def prawReddit(user_data):
         user_data["recent_post_id"] = top_posts[0].fullname
     for submission in top_posts:
         if (user_data["keyword"] != ""):
-            print("https://www.reddit.com" + submission.permalink)
+            #print("https://www.reddit.com" + submission.permalink)
             if (user_data["keyword"] in submission.title.lower()):
                 returnList.append("https://www.reddit.com" + submission.permalink)
         else:

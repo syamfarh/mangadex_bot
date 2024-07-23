@@ -17,6 +17,7 @@ def send_welcome(message):
 @bot.message_handler(commands=['subreddit'])
 def subreddit_handler(message):
     npd.off_loop(message.from_user.id)
+    npd.update_recent_id(message.from_user.id)
     message = bot.send_message(message.chat.id, "Choose a subreddit to pull from: ")
     bot.register_next_step_handler(message, check_subreddit)
 
@@ -40,11 +41,12 @@ def add_keyword(message):
     scrape_subreddit(message)
 
 def scrape_subreddit(message):
-    while (npd.user_data[message.chat.id]["cont_loop"]):
+    while (npd.user_data[message.chat.id]["cont_loop"] == npd.user_data[message.chat.id]["subreddit"]):
         for link in prawReddit(npd.user_data[message.chat.id]):
             bot.send_message(message.chat.id, link)
         bot.send_message(message.chat.id, "going to sleep!")
         print(npd.user_data)
-        time.sleep(1800)
+        time.sleep(10)
+    return
 
 bot.polling(none_stop=True)
