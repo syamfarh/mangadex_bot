@@ -32,7 +32,13 @@ def prawReddit():
 def checkRemoved(last_fetched_post_id):
     post2 = reddit.submission(id=last_fetched_post_id[3:])
     return not(post2.removed_by_category is None)
-    
+
+def subExists(sub):
+    try:
+        reddit.subreddits.search_by_name(sub, exact=True, include_nsfw=True)
+        return True
+    except:
+        return False
 
 if __name__ == '__main__':
-    prawReddit()
+    print(subExists("nsfw"))
