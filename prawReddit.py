@@ -11,9 +11,9 @@ reddit = praw.Reddit(
     user_agent = os.getenv("USER_AGENT"),
 )
 
-def prawReddit():
-    last_fetched_post_id = os.environ["LAST_FETCHED_POST_ID"]
-    subreddit = reddit.subreddit("manga")
+def prawReddit(user_data):
+    last_fetched_post_id = user_data["recent_post_id"]
+    subreddit = reddit.subreddit(user_data["subreddit"])
     returnList = []
     if (checkRemoved(last_fetched_post_id)):
         top_posts = list(subreddit.new(limit=10))
@@ -21,15 +21,18 @@ def prawReddit():
         top_posts = list(subreddit.new(limit=None, params={
                     'before': last_fetched_post_id}))
     if (top_posts):
-        os.environ["LAST_FETCHED_POST_ID"] = top_posts[0].fullname
-        set_key(dotenv_file, "LAST_FETCHED_POST_ID", os.environ["LAST_FETCHED_POST_ID"])
+        user_data["subreddit"] = top_posts[0].fullname
     for submission in top_posts:
-        if ("[DISC]" in submission.title):
-            returnList.append("https://www.reddit.com" + submission.permalink)
-    
+        if (user_data["keyword"] != ""):
+            if (user_data["keyword"] in submission.title):
+                returnList.append("https://www.reddit.com" + submission.permalink)
+        else:
+            returnList.append("https://www.reddit.com" + submission.permalink) 
     return returnList
 
 def checkRemoved(last_fetched_post_id):
+    if (last_fetched_post_id == ""):
+        return True
     post2 = reddit.submission(id=last_fetched_post_id[3:])
     return not(post2.removed_by_category is None)
 
@@ -41,4 +44,6 @@ def subExists(sub):
         return False
 
 if __name__ == '__main__':
-    print(subExists("nsfw"))
+    user_data1 = {"recent_post_id": "", "subreddit": "manga", "keyword": "[DISC]"}
+    user_data2 = {"recent_post_id": "", "subreddit": "nsfw", "keyword": ""}
+    print(prawReddit(user_data2))
