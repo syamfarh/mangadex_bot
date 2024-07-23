@@ -6,6 +6,17 @@ def add_user(id):
         user_data[id]["subreddit"] = ""
         user_data[id]["recent_post_id"] = ""
         user_data[id]["keyword"] = ""
+    user_data[id]["cont_loop"] = False
 
 def add_subreddit_to_user(message):
     user_data[message.from_user.id]["subreddit"] = message.text
+    
+def add_keyword_to_user(message):
+    user_data[message.from_user.id]["keyword"] = message.text.lower()
+    
+
+def off_loop(id):
+    user_data[id]["cont_loop"] = False
+
+def on_loop(id):
+    user_data[id]["cont_loop"] = True
