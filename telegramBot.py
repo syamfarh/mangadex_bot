@@ -45,6 +45,6 @@ def scrape_subreddit(message):
             bot.send_message(message.chat.id, link)
         bot.send_message(message.chat.id, "going to sleep!")
         print(npd.user_data)
-        time.sleep(10)
+        time.sleep(1800)
 
 bot.polling(none_stop=True)
