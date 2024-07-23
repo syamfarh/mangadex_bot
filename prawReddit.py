@@ -21,10 +21,11 @@ def prawReddit(user_data):
         top_posts = list(subreddit.new(limit=None, params={
                     'before': last_fetched_post_id}))
     if (top_posts):
-        user_data["subreddit"] = top_posts[0].fullname
+        user_data["recent_post_id"] = top_posts[0].fullname
     for submission in top_posts:
         if (user_data["keyword"] != ""):
-            if (user_data["keyword"] in submission.title):
+            print("https://www.reddit.com" + submission.permalink)
+            if (user_data["keyword"] in submission.title.lower()):
                 returnList.append("https://www.reddit.com" + submission.permalink)
         else:
             returnList.append("https://www.reddit.com" + submission.permalink) 
